@@ -1,4 +1,4 @@
-function [ output_args ] = generate(v, t0 ,SNR, n)
+function [ x, Fs ] = generate(v, t0 ,SNR, n)
 %GENERATE2 Summary of this function goes here
 %   n = 0, no noise. n=1, adds noise.
 f0 = 10.525e9;
@@ -16,32 +16,31 @@ d = 12./v;
 smoothness = 1/3;
 for i = 1:length(d)
     u(i,:) = (atan((t-t0(i)+d(i)/2)/smoothness) + pi/2)/pi - (atan((t-t0(i)-d(i)/2)/smoothness) + pi/2)/pi; 
-    u(i,:) = u(i,:)/max(u(i,:)); %Normalització de la potència
+    u(i,:) = u(i,:)/max(u(i,:)); %Normalitzaci? de la pot?ncia
     
 end
-figure(10);   
-plot(t,u);
+
 a = A*u;
 
 for i= 1:length(v)
     x = x+a(i,:).*sin(2*pi*fd(i)*(t>=t0(i)-d(i)/2).*(t<=t0(i)+d(i)/2).*t);
 end
-figure(1)
+figure(10)
+subplot(2,2,1)
 plot(t,x);
-figure(2)
+subplot(2,2,2)
 plot(abs(fft(x)))
-figure(1);
-subplot(2,1,1)
+subplot(2,2,3)
 spectrogram(x,256,128,256,Fs);
 view([0 0]);
 title('Power vs Frequency')
 
-subplot(2,1,2)
+subplot(2,2,4)
 spectrogram(x,256,128,256,Fs);
 view([90 0]);
 title('Power vs Time')
 
-sound(x,Fs);
+%sound(x,Fs);
 
 end
 
