@@ -1,15 +1,17 @@
 import wx, os
+import wx.lib.inspection
 
 class MainWindow(wx.Frame):
 	""" Una clase personalizada de frame """
 	def __init__(self, parent):
 		wx.Frame.__init__(self, parent, title='RADiCal' , size=(650,400))
 		self.parent = parent
-		
+
 		self.panel = wx.Panel(self)
-		wx.StaticBox(self.panel, label='Some states:', pos=(10, 150), size=(300, 140))
-		wx.StaticBox(self.panel, label='Histogram:', pos=(345, 150), size=(300, 200))
-		wx.StaticBox(self.panel, label='Speed Historial:', pos=(10, 80), size=(630, 50))
+		self.states = wx.StaticBox(self.panel, label='Some states:', pos=(10, 150), size=(300, 140))
+		self.hist = wx.StaticBox(self.panel, label='Histogram:', pos=(345, 150), size=(300, 200))
+		self.speedhist = wx.StaticBox(self.panel, label='Speed Historial:', pos=(10, 80), size=(630, 50))
+
 
 		self.speed = wx.StaticText(self.panel, label="Actual Speed: ", pos=(150,30))
 		font2 = wx.Font(24, wx.MODERN, wx.ITALIC, wx.BOLD)
@@ -39,6 +41,7 @@ class MainWindow(wx.Frame):
 		# Creamos los eventos
 		self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
 		self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
+
    
 	# Definimos los metodos de los eventos
 
