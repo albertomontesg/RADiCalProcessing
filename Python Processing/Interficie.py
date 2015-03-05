@@ -2,29 +2,33 @@ import wx, os
 
 class MainWindow(wx.Frame):
 	""" Una clase personalizada de frame """
-	def __init__(self, parent, title):
+	def __init__(self, parent):
 		wx.Frame.__init__(self, parent, title='RADiCal' , size=(650,400))
-		#self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
 		self.parent = parent
 		
-		panelB = wx.Panel(self)
-		wx.StaticBox(panelB, label='Some states:', pos=(10, 150), size=(300, 200))
-		wx.StaticBox(panelB, label='Histogram:', pos=(345, 150), size=(300, 200))
+		self.panel = wx.Panel(self)
+		wx.StaticBox(self.panel, label='Some states:', pos=(10, 150), size=(300, 140))
+		wx.StaticBox(self.panel, label='Histogram:', pos=(345, 150), size=(300, 200))
+		wx.StaticBox(self.panel, label='Speed Historial:', pos=(10, 80), size=(630, 50))
 
-		self.speed = wx.StaticText(panelB, label="Actual Speed: ", pos=(20,30))
+		self.speed = wx.StaticText(self.panel, label="Actual Speed: ", pos=(150,30))
+		font2 = wx.Font(24, wx.MODERN, wx.ITALIC, wx.BOLD)
+		self.speed.SetFont(font2)
 
 		#Inside Some States box:
-		self.average = wx.StaticText(panelB, label="Average: ", pos=(30, 180))
-		self.maxim = wx.StaticText(panelB, label="Maximum: ", pos=(30, 210))
-		self.aminim = wx.StaticText(panelB, label="Minimum: ", pos=(30, 240))
+		self.average = wx.StaticText(self.panel, label="Average: ", pos=(30, 180))
+		self.maxim = wx.StaticText(self.panel, label="Maximum: ", pos=(30, 210))
+		self.minim = wx.StaticText(self.panel, label="Minimum: ", pos=(30, 240))
+		font3 = wx.Font(15, wx.NORMAL, wx.ITALIC, wx.NORMAL)
+		self.average.SetFont(font3)
+		self.maxim.SetFont(font3)
+		self.minim.SetFont(font3)
 		
 		self.CreateStatusBar() 
 
 		menuBar = wx.MenuBar()
 
 		filemenu = wx.Menu()
-		menuOpen = filemenu.Append(wx.ID_OPEN, "Open", "Open a file")
-		filemenu.AppendSeparator()
 		menuAbout = filemenu.Append(102, "About"," Information about this program")
 		filemenu.AppendSeparator()
 		menuExit = filemenu.Append(103,"Exit"," Terminate the program")
@@ -33,20 +37,10 @@ class MainWindow(wx.Frame):
 		self.SetMenuBar(menuBar)  # Adding the MenuBar to the Frame content.
 
 		# Creamos los eventos
-		self.Bind(wx.EVT_MENU, self.OnOpen, menuOpen)
 		self.Bind(wx.EVT_MENU, self.OnAbout, menuAbout)
 		self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
-		 
-		self.Show(True)
    
 	# Definimos los metodos de los eventos
-
-	def EvtText(self, event):
-		self.logger.AppendText('Evento de texto: %sn' % event.GetString)
-
-	def EvtChar(self, event):
-		self.logger.AppendText('Evento de caracter: %dn' % event.GetKeyCode())
-		event.Skip()
 
 	def OnAbout(self,e):
 		# Creamos una ventana de dialogo con un boton de ok. wx.OK es una ID estandard de wxWidgets.
@@ -57,27 +51,11 @@ class MainWindow(wx.Frame):
 	def OnExit(self,e):
 		self.Close(True)  # Cerramos el frame
 		
-	def OnOpen(self,e):
-		# Podemos crear un evento extra para abrir un fichero de texto
-		"""Abrir un fichero"""
-		self.dirname = ''
-		# Abrimos una ventana de dialogo de fichero para seleccionar algun fichero
-		dlg = wx.FileDialog(self, "Elige un fichero", self.dirname, "", "*.*", wx.OPEN)
-		# Si se selecciona alguno => OK
-		if dlg.ShowModal() == wx.ID_OK: 
-			self.filename = dlg.GetFilename()   # Guardamos el nombre del fichero
-			self.dirname = dlg.GetDirectory()   # Y el directorio
-			
-			# Abrimos el fichero en modo lectura
-			f = open(os.path.join(self.dirname, self.filename), 'r')
-			# Y con setValue pasamos el fichero al control de texto
-			self.control.SetValue(f.read()) 
-			f.close()   # Lo cerramos
-		dlg.Destroy()   # Finalmente destruimos la ventana de dialogo
 
 def Show():
 	app = wx.App(False)
-	MainWindow(None, "RADiCal")
+	frame = MainWindow(None)
+	frame.Show(True)
 	app.MainLoop()
 
 if __name__ == "__main__":
