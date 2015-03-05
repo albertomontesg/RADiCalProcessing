@@ -2,21 +2,27 @@ import wx, os
 
 class MainWindow(wx.Frame):
 	""" Una clase personalizada de frame """
-	def __init__(self, parent, title):
+	def __init__(self, parent):
 		wx.Frame.__init__(self, parent, title='RADiCal' , size=(650,400))
-		#self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
 		self.parent = parent
 		
-		panelB = wx.Panel(self)
-		wx.StaticBox(panelB, label='Some states:', pos=(10, 150), size=(300, 200))
-		wx.StaticBox(panelB, label='Histogram:', pos=(345, 150), size=(300, 200))
+		self.panel = wx.Panel(self)
+		wx.StaticBox(self.panel, label='Some states:', pos=(10, 150), size=(300, 140))
+		wx.StaticBox(self.panel, label='Histogram:', pos=(345, 150), size=(300, 200))
+		wx.StaticBox(self.panel, label='Speed Historial:', pos=(10, 80), size=(630, 50))
 
-		self.speed = wx.StaticText(panelB, label="Actual Speed: ", pos=(20,30))
+		self.speed = wx.StaticText(self.panel, label="Actual Speed: ", pos=(150,30))
+		font2 = wx.Font(24, wx.MODERN, wx.ITALIC, wx.BOLD)
+		self.speed.SetFont(font2)
 
 		#Inside Some States box:
-		self.average = wx.StaticText(panelB, label="Average: ", pos=(30, 180))
-		self.maxim = wx.StaticText(panelB, label="Maximum: ", pos=(30, 210))
-		self.aminim = wx.StaticText(panelB, label="Minimum: ", pos=(30, 240))
+		self.average = wx.StaticText(self.panel, label="Average: ", pos=(30, 180))
+		self.maxim = wx.StaticText(self.panel, label="Maximum: ", pos=(30, 210))
+		self.minim = wx.StaticText(self.panel, label="Minimum: ", pos=(30, 240))
+		font3 = wx.Font(15, wx.NORMAL, wx.ITALIC, wx.NORMAL)
+		self.average.SetFont(font3)
+		self.maxim.SetFont(font3)
+		self.minim.SetFont(font3)
 		
 		self.CreateStatusBar() 
 
@@ -35,6 +41,10 @@ class MainWindow(wx.Frame):
 		self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
    
 	# Definimos los metodos de los eventos
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	def OnAbout(self,e):
 		# Creamos una ventana de dialogo con un boton de ok. wx.OK es una ID estandard de wxWidgets.
 		dlg = wx.MessageDialog( self, "It is a doppler radar implemented by students of ETSETB", "About RADiCal", wx.OK)
@@ -47,7 +57,8 @@ class MainWindow(wx.Frame):
 
 def Show():
 	app = wx.App(False)
-	MainWindow(None, "RADiCal")
+	frame = MainWindow(None)
+	frame.Show(True)
 	app.MainLoop()
 
 if __name__ == "__main__":
