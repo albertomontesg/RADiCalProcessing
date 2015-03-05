@@ -22,7 +22,7 @@ plot(unwrap(angle(S(:,429))))
 peaks = zeros(size(P));
 bw = zeros(size(P));
 for i=1:size(psd,2)
-    [pk, loc, b] = findpeaks(abs(P(:,i)),F,'MinPeakWidth',0,'MinPeakHeight', 10^(-3));
+    [pk, loc, b] = findpeaks(abs(P(:,i)), F, 'MinPeakWidth', 0, 'MinPeakHeight', 10^(-3));
     for j=1:length(loc)
         peaks(loc(j)==F,i) = pk(j);
         bw(loc(j)==F,i) = b(j);
