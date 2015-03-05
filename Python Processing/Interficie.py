@@ -41,10 +41,7 @@ class MainWindow(wx.Frame):
 		self.Bind(wx.EVT_MENU, self.OnExit, menuExit)
    
 	# Definimos los metodos de los eventos
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
 	def OnAbout(self,e):
 		# Creamos una ventana de dialogo con un boton de ok. wx.OK es una ID estandard de wxWidgets.
 		dlg = wx.MessageDialog( self, "It is a doppler radar implemented by students of ETSETB", "About RADiCal", wx.OK)

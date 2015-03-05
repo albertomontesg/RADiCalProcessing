@@ -1,0 +1,15 @@
+Samples recorded from the Front-End team capturing a person walking from far and come near the antenna.
+Each file is in different situations:
+
+# sample1.mat : walking carrying two paper bins
+# sample2.mat : walking without them (normal walking)
+# sample3.mat : running to the antenna
+
+At the end of the samples, the final waves are because the persona aproaching the antenna stops in front of it.
+
+To load the variables write on MATLAB:
+>> load('sample#.mat')
+
+Sampling information: 
+44.1 kHz
+32 bits float
