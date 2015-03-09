@@ -33,6 +33,15 @@ class Interface(wx.Frame):
 		self.average.SetFont(font3)
 		self.maxim.SetFont(font3)
 		self.minim.SetFont(font3)
+
+		"""#Inside Speed Historial box
+		self.pos1 = wx.StaticText(self.panel, label='-- km/h', pos=(25, 100))
+		self.pos2 = wx.StaticText(self.panel, label='-- km/h', pos=(115, 100))
+		self.pos3 = wx.StaticText(self.panel, label='-- km/h', pos=(205, 100))
+		self.pos4 = wx.StaticText(self.panel, label='-- km/h', pos=(295, 100))
+		self.pos5 = wx.StaticText(self.panel, label='-- km/h', pos=(385, 100))
+		self.pos6 = wx.StaticText(self.panel, label='-- km/h', pos=(475, 100))
+		self.pos7 = wx.StaticText(self.panel, label='-- km/h', pos=(565, 100))"""
 		
 		self.CreateStatusBar() 
 
@@ -61,15 +70,23 @@ class Interface(wx.Frame):
 		self.Close(True)  # Cerramos el frame
 
 
-	# def update_stats(aver, min, max):
+	def update_stats(self, v):
+		average = np.average(v)
+		min_s = np.min(v)
+		max_s = np.max(v)
+
+		self.average.SetLabel("Average: %.1f km/h" %average)
+		self.maxim.SetLabel("Maximum: %.1f km/h" %max_s)
+		self.minim.SetLabel("Minimum: %.1f km/h" %min_s)
 
 
 	# def update_histogram(speeds):
 
+	#def update_speedhist(self, v):
 
 
 	def update_speed(self, speed):
-		self.speed.SetLabel("Actual Speed: %.1f" %speed)
+		self.speed.SetLabel("Actual Speed: %.1f km/h" %speed)
 
 class CanvasPanel(wx.Panel):
 	def __init__(self, parent):
@@ -90,9 +107,12 @@ class CanvasPanel(wx.Panel):
 
 if __name__ == "__main__":
 	app = wx.App(False)
+<<<<<<< HEAD
 	i = Interface(None)
 	i.Show(True)
 <<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
 
 =======
 >>>>>>> Stashed changes

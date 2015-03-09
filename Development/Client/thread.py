@@ -2,7 +2,8 @@ from interface import Interface
 import wx
 from threading import Thread
 from time import sleep
-from radar import Radar as rd
+from radar import Radar
+import numpy as np
 
 
 class CustomThread(Thread):
@@ -24,26 +25,26 @@ class CustomThread(Thread):
 		# peek at the abort variable
 		i = Interface(None)
 		i.Show(True)
-
-		speed = 1.0
+		rd = Radar(object)
 
 		high = rd.setHeigh()
 		lenght = rd.setLenght()
 		distance = rd.setDistance()
-		rd.computAngles()
 
 		index = 0
 
 		fd = [300, 5000, 4400, 2300, 700]
+		self.v = [0] * len(fd)
 		
 
 		for index in range(len(fd)):
 
-			v = processing(fd(index), high, lenght, distance)
+			self.v[index] = rd.processing(fd[index], high, lenght, distance)
 
 			sleep(1)
-			i.update_speed(v)
-			print speed
+			i.update_speed(self.v[index])
+			#i.update_speedhist(self.v)
+			i.update_stats(self.v)
 
 		if self._want_abort:
 			# Use a result of None to acknowledge the abort (of
@@ -67,7 +68,6 @@ if __name__ == "__main__":
 
 	app = wx.App(False)
 	i = Interface(None)
-	i.Show(True)
 
 	thread1 = CustomThread(i)
 	thread1.start()

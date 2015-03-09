@@ -6,7 +6,7 @@ f0 = 10.525e9
 c = 3e8
 lamb = c/f0
 
-class Radar(Object):
+class Radar(object):
 	def __init__(self, interface):
 		self.high = 0
 		self.lenght = 0
@@ -29,11 +29,6 @@ class Radar(Object):
 		if self.distance == 0:
 			self.distance = int(raw_input("Please, enter distance: "))
 
-	def computAngles(self):
-		#Caluculem angles
-		self.angle_az = np.arctan2(self.high, self.lenght)		
-		self.angle_cen = np.arctan2(self.distance, self.lenght)
-
 	def update_stats():
 		average = np.average(self.historic_speeds)
 		min_s = np.min(self.historic_speeds)
@@ -41,7 +36,11 @@ class Radar(Object):
 		self.interface.update_stats(aver = average, min = min_s, max = max_s)
 		self.interface.update_histogram(self.historic_speeds)
 
-	def processing(self, f):
+	def processing(self, f, high, lenght, distance):
+
+		#Caluculem angles
+		self.angle_az = np.arctan2(self.high, self.lenght)		
+		self.angle_cen = np.arctan2(self.distance, self.lenght)
 
 		#Trobem la velocitat radial a partir de la fd i lambda
 		vrad = (f*lamb)/2
@@ -56,5 +55,7 @@ class Radar(Object):
 
 		self.historic_speeds = np.append(self.historic_speeds, vkm)
 
-		self.interface.show_speed(vkm)
-		self.interface.update_stats(self.historic_speeds)
+		#self.interface.show_speed(vkm)
+		#self.update_stats(self.historic_speeds)
+
+		return vkm
