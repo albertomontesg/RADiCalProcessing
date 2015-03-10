@@ -4,6 +4,7 @@ from threading import Thread
 from time import sleep
 from radar import Radar
 import numpy as np
+from client import Client
 
 
 class CustomThread(Thread):
@@ -23,7 +24,7 @@ class CustomThread(Thread):
 		# a long process (well, 10s here) as a simple loop - you will
 		# need to structure your processing so that you periodically
 		# peek at the abort variable
-		i = Interface(None)
+		self.interface.Show(True)
 		i.Show(True)
 		rd = Radar(object)
 
@@ -33,8 +34,8 @@ class CustomThread(Thread):
 
 		index = 0
 
-		fd = [300, 5000, 4400, 2300, 700]
-		self.v = [0] * len(fd)
+		fd = [300.0, 5000.0, 4400.0, 2300.0, 700.0, 3021.0, 425.0, 742.0, 1506.0, 1002.0, 5302.0, 2890.0, 3876.0]
+		self.v =[min(fd)] * len(fd)
 		
 
 		for index in range(len(fd)):
@@ -43,8 +44,9 @@ class CustomThread(Thread):
 
 			sleep(1)
 			i.update_speed(self.v[index])
-			#i.update_speedhist(self.v)
-			i.update_stats(self.v)
+			i.update_stats(self.v, index)
+			i.update_speedhist(self.v, index)
+			#i.update_histogram(self.v, index)
 
 		if self._want_abort:
 			# Use a result of None to acknowledge the abort (of
@@ -65,10 +67,13 @@ if __name__ == "__main__":
 # preguntem dades
 # fem un show de la interface
 # loop mostrant dades
+	
 
 	app = wx.App(False)
 	i = Interface(None)
+	i.Show(True)
 
-	thread1 = CustomThread(i)
-	thread1.start()
+	client = Client(i)
+	client.start()
+
 	app.MainLoop()

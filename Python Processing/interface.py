@@ -85,35 +85,11 @@ class Interface(wx.Frame):
 	#def update_speedhist(self, v):
 
 
+
 	def update_speed(self, speed):
 		self.speed.SetLabel("Actual Speed: %.1f km/h" %speed)
 
-class CanvasPanel(wx.Panel):
-	def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
-        self.figure = Figure()
-        self.axes = self.figure.add_subplot(111)
-        self.canvas = FigureCanvas(self, -1, self.figure)
-        self.sizer = wx.BoxSizer(wx.VERTICAL)
-        self.sizer.Add(self.canvas, 1, wx.LEFT | wx.TOP | wx.GROW)
-        self.SetSizer(self.sizer)
-        self.Fit()
-
-    def draw(self):
-        t = arange(0.0, 3.0, 0.01)
-        s = sin(2 * pi * t)
-        self.axes.plot(t, s)
-
-
 if __name__ == "__main__":
 	app = wx.App(False)
-<<<<<<< HEAD
-	i = Interface(None)
-	i.Show(True)
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/master
 
-=======
->>>>>>> Stashed changes
 	app.MainLoop()
