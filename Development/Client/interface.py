@@ -5,7 +5,8 @@ import time
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-#matplotlib.use('WXAgg')
+matplotlib.use('wx')
+from pylab import *
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.backends.backend_wx import NavigationToolbar2Wx
@@ -138,8 +139,9 @@ class Histogram(wx.Frame):
 		self.parent = parent
 
 		self.panel = wx.Panel(self)
-		self.hl, = plt.plot([], [])
 
+		fig = plt.figure()
+		#self.hl, = plt.plot([], [])
 
 	def update_hist(self, v, index):
 		
@@ -151,28 +153,28 @@ class Histogram(wx.Frame):
 			f[int(np.trunc(v[i]))] = f[int(np.trunc(v[i]))] + 1
 
 		f_norm = f / np.sum(f)
+		time.sleep(0.6)
 
-		print "Creant..."
+		plt.ion()
+		#self.hl.set_xdata(x)
+		#self.hl.set_ydata(f_norm)
+		plt.cla()
+		n, bins, patches = plt.hist(v[:np.min(minim)], 90, normed=1, facecolor='g', alpha=1)
 
-		self.hl.set_xdata(x)
-		self.hl.set_ydata(f_norm)
-
-		print "Creat"
-		
 		plt.xlabel('Speed')
 		plt.ylabel('Probability')
 		plt.title('Histogram of Speed')
-		plt.axis([0, 100, 0, 1])
+		plt.axis([0, 200, 0, 1])
 		plt.grid(True)
-		plt.draw()
+		plt.show()
 
 if __name__ == "__main__":
 
 	app = wx.App(False)
 	i = Interface(None)
-	h = Histogram(None)
 	i.Show(True)
-	h.Show(True)
+
+	h = Histogram(None)
 
 	app.MainLoop()
 

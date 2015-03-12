@@ -73,7 +73,7 @@ if __name__ == "__main__":
 	i = Interface(None)
 	h = Histogram(None)
 	i.Show(True)
-	h.Show(True)
+	#h.Show(True)
 
 	client = Client(i, h)
 	client.start()
