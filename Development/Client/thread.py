@@ -1,4 +1,5 @@
 from interface import Interface
+from interface import Histogram
 import wx
 from threading import Thread
 from time import sleep
@@ -26,7 +27,6 @@ class CustomThread(Thread):
 		# peek at the abort variable
 		self.interface.Show(True)
 		i.Show(True)
-		rd = Radar(object)
 
 		high = rd.setHeigh()
 		lenght = rd.setLenght()
@@ -71,9 +71,11 @@ if __name__ == "__main__":
 
 	app = wx.App(False)
 	i = Interface(None)
+	h = Histogram(None)
 	i.Show(True)
+	h.Show(True)
 
-	client = Client(i)
+	client = Client(i, h)
 	client.start()
 
 	app.MainLoop()
