@@ -9,27 +9,36 @@ psd = 10*log10(abs(S*1e3));
 
 figure(1)
 psd_t = psd(:,429);
-subplot(2,1,1)
+subplot(1,1,1)
 plot(F,psd_t)
+hold on
 [pks,locs,W]=findpeaks(psd_t,F,'MinPeakWidth', 0, 'MinPeakHeight', 0);
 text(locs+.02,pks,strcat(num2str((1:numel(pks))'),num2str(W,'%.2f')))
 
+[mu, sig, muci, sigci]=normfit(pks, 1e-3);
+thresehold = mu+2*sig
+sum(pks>thresehold)
+plot(F, thresehold*ones(size(F,1)), '-r')
+hold off
+
+
+%%
 subplot(2,1,2)
 plot(unwrap(angle(S(:,429))))
 
-
+%%
 % Inizialize peaks
-peaks = zeros(size(P));
+pks = zeros(size(P));
 bw = zeros(size(P));
 for i=1:size(psd,2)
     [pk, loc, b] = findpeaks(abs(P(:,i)), F, 'MinPeakWidth', 0, 'MinPeakHeight', 10^(-3));
     for j=1:length(loc)
-        peaks(loc(j)==F,i) = pk(j);
+        pks(loc(j)==F,i) = pk(j);
         bw(loc(j)==F,i) = b(j);
     end
 end
 figure(2)
-surf(T,F,10*log10(abs(peaks*1e3)))
+surf(T,F,10*log10(abs(pks*1e3)))
 xlabel('time (s)')
 ylabel('frequency (Hz)')
 zlabel('PSD (dBm)')
