@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import struct
 import scipy.signal
+from cPickle import load, dump
+
+SAVE_DIR = '/media/usb/RADiCal/test/test%d.pkl'
 
 CHUNK = 512
 FORMAT = pyaudio.paInt16
@@ -59,6 +62,11 @@ def process(data):
 	ft = 10*np.log10(np.abs(data))
 	#peaks = scipy.signal.find_peaks_cwt(ft)
 	print ft
+
+def save(data, num):
+	save_path = SAVE_DIR % num
+	save_file = open(save_path, 'w')
+	dump(data, save_file)
 
 #data = np.array(frames)
 #plt.plot(proces)
