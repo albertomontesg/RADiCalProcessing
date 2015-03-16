@@ -104,7 +104,7 @@ class Interface(wx.Frame):
 		self.pos6.SetLabel(" %.2f  km/h" %v_update[5])
 
 	def update_speed(self, speed):
-		self.speed.SetLabel("Actual Speed: %.1f" %speed)
+		self.speed.SetLabel("Actual Speed: %.1f km/h" %speed)
 
 	# def update_hist(self, v, index):
 		

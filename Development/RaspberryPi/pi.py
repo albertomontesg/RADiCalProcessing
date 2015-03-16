@@ -1,38 +1,24 @@
 
-import protocol as p
-import socket
-import time
+from serial_connection import SerialConnection
+from connection import Connection
+from radar import Radar
 
-HOST = '52.10.85.244'
-PORT = 30000
-server_adress = (HOST, PORT)
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+SPEED_THRESHOLD = 0.0
 
-speeds = [123.4, 34.3, 97.5, 45.6, 99.9]
+if __name__ == "__main__":
+	c = Connection()
+	sc = SerialConnection()
 
-def get_value(i):
-	## get value from the serial
-	## return value as integer
-	
-	print 'Send:', speeds[i%5]
-	return speeds[i%5]
-
-
-def single_vehicle():
+	# Inicialize Radar
+	radar = Radar()
+	radar.setHeight()
+	radar.setLength()
+	radar.setDistance()
 
 	while True:
-		speed = get_value()
-		try:
-			s.sendall(p.code_1_information(speed))
-		except:
-			s.close()
-		time.sleep(.5)
+		f = sc.get_data()	# Blocking method
+		speed = radar.processing(f)
+		if speed > SPEED_THRESHOLD:	# Greater than 2 km/h
+			c.send_speed(speed)
 
-if __name__ == '__main__':
-	s.connect(server_adress)
-	i = 0
-	while True:
-		speed = get_value(i)
-		s.sendall(p.code_1_information(speed))
-		time.sleep(.5)
-		i += 1
+	sc.close()
