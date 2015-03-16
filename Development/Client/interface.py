@@ -19,7 +19,6 @@ class Interface(wx.Frame):
 
 		self.panel = wx.Panel(self)
 		self.states = wx.StaticBox(self.panel, label='Some states:', pos=(25, 150), size=(600, 140))
-		#self.hist = wx.StaticBox(self.panel, label='Histogram:', pos=(345, 150), size=(300, 200))
 		self.speedhist = wx.StaticBox(self.panel, label='Speed Historial:', pos=(10, 80), size=(630, 50))
 
 
