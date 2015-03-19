@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [stft, f, t] = stft(x, wlen, h, nfft, fs)
-close all;
+
 % function: [stft, t, f] = mystftfun(x, fs, wlen, h, nfft)
 % x - signal in the time domain
 % wlen - length of the hamming window
@@ -26,9 +26,7 @@ end
 xlen = length(x);
 
 % form a periodic hamming window
-%win = hamming(wlen, 'periodic');
-%Changed to Chebyshev window
-win = chebwin(wlen);
+win = hamming(wlen, 'periodic');
 
 % form the stft matrix
 rown = ceil((1+nfft)/2);            % calculate the total number of rows
@@ -47,47 +45,12 @@ while indx + wlen <= xlen
     % FFT
     X = fft(xw, nfft);
     
-    %Plot
-    K = length(X);
-    threshold = 60;
-    f_plot = (1:floor(K/2))*fs/K;
-    f_plot = f_plot(f_plot < 7000); %Limit of f axis is 7KHz.
-    FFT = 20*log(abs(X(1:length(f_plot),1))); %FFT dB.
-    figure(1);
-    plot(f_plot,FFT,f_plot, threshold*ones(length(f_plot)),'-r');
-    axis([0 max(f_plot) 0 20*log(500)]);
-
-    %[pks,locs]=findpeaks(FFT,f_plot,'MinPeakWidth', 0, 'MinPeakHeight', 0);
-    [pks,locs]=findpeaks(FFT);
-
-    locs = locs(pks > threshold);
-    pks = pks(pks > threshold);
-    if(pks>0) 
-        display(locs);
-    end
-
-    str1 = '\leftarrow cotxe';
-    text(locs+.02,pks,str1);
-    drawnow
-
-
-    
-    
-    
     % update the stft matrix
     stft(:,col) = X(1:(rown));
     
     % update the indexes
     indx = indx + h;
     col = col + 1;
-    
-    %Display the time
-    display(indx/fs);
-    %if(indx/fs < 0.75)
-        %pause(0.01);
-    %else
-    %    pause(0.15);
-    
 end
 
 % calculate the time and frequency vectors

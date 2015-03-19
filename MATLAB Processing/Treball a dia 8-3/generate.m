@@ -1,11 +1,11 @@
-function [ x, Fs ] = generate(v, t0 ,SNR, n)
+function [ x, Fs ] = generate(v,t0 ,SNR, n)
 %GENERATE2 Summary of this function goes here
 %   n = 0, no noise. n=1, adds noise.
 f0 = 10.525e9;
 c = 3e8;
 N0 = 0.5;
 A = sqrt(10^(SNR/10)*N0); %Amplitud de senyal
-Fs=44.1e3; %Hz
+Fs=10e3; %Hz
 T=10; %segons
 t = 0:1/Fs:T;
 x = normrnd(0,N0,1,length(t))*n;
