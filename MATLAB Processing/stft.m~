@@ -40,7 +40,7 @@ indx = 0;
 col = 1;
 
 % perform STFT
-threshold = 1000000;
+threshold = 10000;
 
 while indx + wlen <= xlen
     % windowing
@@ -51,31 +51,28 @@ while indx + wlen <= xlen
     
     %Plot
     K = length(X);
+   
     
     f_plot = (1:floor(K/2))*fs/K;
     f_plot = f_plot(f_plot < 7000); %Limit of f axis is 7KHz.
-    fft_x = abs(X(1:length(f_plot),1));
-    FFT = 20*log10(fft_x); %FFT dB.
+    FFT = 20*log(abs(X(1:length(f_plot),1))); %FFT dB.
     figure(1);
     
     %threshold = 60;
-    pos = fft_x<threshold;
-    mn = mean(fft_x(pos));
-    st = std(fft_x(pos));
-    threshold = (mn + 5*st);
+    pos = FFT<threshold;
+    mn = mean(FFT(pos));
+    st = std(FFT(pos));
+    threshold = mn + 2.5*st;
     
-    plot(f_plot,fft_x,f_plot, threshold*ones(length(f_plot)),'-r');
-%     
-%     if indx == 0
-%         d = plot(f_plot,FFT,f_plot, threshold*ones(length(f_plot)),'-r');
-%     else
-%         set(d, 'YData', FFT);
-%         %set(d(2), 'YData', threshold*ones(length(f_plot)));
-%     end
-    axis([0 max(f_plot) 0 10]);
+    if index == 0
+        d = plot(f_plot,FFT,f_plot, threshold*ones(length(f_plot)),'-r');
+    else
+        set(d, 'YData', FFT, 
+    end
+    axis([0 max(f_plot) 0 20*log(500)]);
 
     %[pks,locs]=findpeaks(FFT,f_plot,'MinPeakWidth', 0, 'MinPeakHeight', 0);
-    [pks,locs]=findpeaks(fft_x, 'MinPeakHeight', threshold);
+    [pks,locs]=findpeaks(FFT, 'MinPeakHeight', threshold);
 
     locs = locs(pks > threshold);
     pks = pks(pks > threshold);

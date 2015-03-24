@@ -3,9 +3,9 @@ function [ x, Fs ] = generate(v, t0 ,SNR, n)
 %   n = 0, no noise. n=1, adds noise.
 f0 = 10.525e9;
 c = 3e8;
-N0 = 0.5;
-A = sqrt(10^(SNR/10)*N0); %Amplitud de senyal
 Fs=44.1e3; %Hz
+N0 = 10e-9*Fs;
+A = sqrt(10^(SNR/10)*N0); %Amplitud de senyal
 T=10; %segons
 t = 0:1/Fs:T;
 x = normrnd(0,N0,1,length(t))*n;
