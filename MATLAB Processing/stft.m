@@ -2,7 +2,7 @@
 %              Short-Time Fourier Transform            %
 %               with MATLAB Implementation             %
 %                                                      %
-% Author: M.Sc. Eng. Hristo Zhivomirov       12/21/13  %
+% Author: Processing Team                              %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [stft, f, t] = stft(x, wlen, h, nfft, fs)
