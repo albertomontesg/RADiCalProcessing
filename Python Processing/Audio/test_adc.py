@@ -8,12 +8,12 @@ from cPickle import load, dump
 
 SAVE_DIR = '/media/usb/RADiCal/test/test%d.pkl'
 
-CHUNK = 512
+CHUNK = 256
 FORMAT = pyaudio.paInt16
 CHANNELS = 1L
 RATE = 44100
 RECORD_SECONDS = 5
-DEVICE_ID = 0
+DEVICE_ID = 3
 p = pyaudio.PyAudio()
 
 stream = p.open(format=FORMAT,
@@ -43,19 +43,16 @@ def rec():
 		for i in range(1000):
 			data = stream.read(CHUNK)
 			frames.append(data)
-			d = np.array(struct.unpack('h'*CHUNK, data))
-			process(d)
+
 			print 'Capture:', i
 		print("* done recording")
 
-		for f in frames:
-			temp = struct.unpack('h'*CHUNK, f)
-			proces = np.append(proces, np.array(temp))
+		
 	finally:
 		stream.stop_stream()
 		stream.close()
 		p.terminate()
-	return proces
+	return frames
 
 
 def process(data):
