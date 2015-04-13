@@ -4,13 +4,12 @@ from scipy.io import wavfile
 from scipy.fftpack import fft, fftshift
 import matplotlib.pyplot as plt
 
-def stft( wlen, h, nfft, fs):
+wlen = 512
+h = wlen/2
+nfft = 1024
+fs = 44100
 
-	i, x = wavfile.read('prova1.wav')
-
-	#Represent x as column-vector if it is not
-	#if x.shape[1] > 1:
-	#	x.conj().transpose()
+def stft(x):
 
 	#Length of the signal
 	xlen = x.size
@@ -35,7 +34,7 @@ def stft( wlen, h, nfft, fs):
 	#while (indx+wlen) in range(xlen):
 
 	#windowing
-	xw = [i * win for i in x[indx+1 : indx+wlen]]
+	xw = win * x[indx+1 : indx+wlen]
 
 	#FFT
 	X = fft(xw, nfft)
@@ -87,3 +86,6 @@ def stft( wlen, h, nfft, fs):
 	t = arange(wlen/2,xlen-wlen/2-1, h)/fs
 	f = arange(0,rown-1,1)*fs/nfft
 
+if __name__ == '__main__':
+	i, x = wavfile.read('prova1.wav')
+	stft(x)
