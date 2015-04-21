@@ -42,9 +42,4 @@ public class Controller {
 		}
 	}
 
-	public receivedInfoFromPi(int id, info) {
-		// save it on the database
-
-	}
-
 }

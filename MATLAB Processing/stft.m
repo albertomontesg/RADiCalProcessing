@@ -53,9 +53,9 @@ while indx + wlen <= xlen
     K = length(X);
     
     f_plot = (1:floor(K/2))*fs/K;
-    f_plot = f_plot(f_plot < 7000); %Limit of f axis is 7KHz.
+    f_plot = f_plot(f_plot < 1000); %Limit of f axis is 7KHz.
     fft_x = abs(X(1:length(f_plot),1));
-    FFT = 20*log10(fft_x); %FFT dB.
+    fft_x = 10*log10(fft_x); %FFT dB.
     figure(1);
     
     %threshold = 60;
@@ -72,7 +72,7 @@ while indx + wlen <= xlen
 %         set(d, 'YData', FFT);
 %         %set(d(2), 'YData', threshold*ones(length(f_plot)));
 %     end
-    axis([0 max(f_plot) 0 10]);
+    axis([0 max(f_plot) -30 20]);
 
     %[pks,locs]=findpeaks(FFT,f_plot,'MinPeakWidth', 0, 'MinPeakHeight', 0);
     [pks,locs]=findpeaks(fft_x, 'MinPeakHeight', threshold);
@@ -86,10 +86,6 @@ while indx + wlen <= xlen
     str1 = '\leftarrow cotxe';
     text(locs+.02,pks,str1);
     drawnow
-
-
-    
-    
     
     % update the stft matrix
     stft(:,col) = X(1:(rown));

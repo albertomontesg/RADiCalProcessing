@@ -4,11 +4,11 @@ from scipy.io import wavfile
 from scipy.fftpack import fft, fftshift
 import matplotlib.pyplot as plt
 
-wlen = 512			# Window length
+wlen = 256			# Window length
 h = wlen/2			# Overlaping
 nfft = 1024			# FFT samples
 fs = 44100 			# Frequency Sampling
-fobs = 7000 		# Search peaks until 7kHz
+fobs = 10000 		# Search peaks until 7kHz
 global threshold	# Initialize threshold
 
 debug = False		# Debug option
@@ -21,8 +21,8 @@ def stft(x):
 
 	#Length of the signal
 	xlen = x.size
-	# Construction of the Chebyschev window
-	win = signal.chebwin(wlen, 100)
+	# Construction of the Chebyschev window (Attenuation = 100dB)
+	win = signal.chebwin(wlen, 50)
 
 	#Form the stft matrix
 	rown = ceil((1+nfft)/2)				#calculate the total number of rows
@@ -35,7 +35,8 @@ def stft(x):
 
 	#Perform STFT
 	global threshold 
-	threshold = 1e7;
+	# threshold = 1e7
+	threshold = 0
 
 	record = zeros(coln)
 	i = 0
@@ -69,6 +70,8 @@ def detection(x):
 	freq = []
 	pwr = []
 
+	x = x-mean(x)
+
 	X = fft(x, nfft)
 	XX = 10*log10(abs(X))[range(int(nfft*fobs/fs))]
 	f = array(range(nfft), dtype = float32)/nfft*fs
@@ -85,7 +88,7 @@ def detection(x):
 		val_pks = pks[where(pks<threshold)]
 		mhu = mean(val_pks)
 		sigma = std(val_pks)
-		threshold = mhu + 4 * sigma
+		# threshold = mhu + 4 * sigma
 
 		if debug:
 			print 'pos', pos
@@ -98,12 +101,18 @@ def detection(x):
 		freq = f[locs]
 		pwr = XX[locs]
 
+		# Clean near peaks
+		temp_pos = []
+		temp_peaks = []
+
+
+
 		if debug:
 			print 'locs', locs
 			print 'freq', freq
 			print 'pwr', pwr
 			print 'threshold', threshold
-			plt.plot(f[:len(XX)], XX, 'b')
+			plt.plot(f[1:len(XX)], XX[1:], 'b')
 			plt.plot(freq, pwr, 'ro')
 			plt.show()
 
@@ -115,9 +124,9 @@ def detection(x):
 
 def find_peaks(vector, threshold = None):
 	pos = []
-	i = 1
-	prev = vector[0]
-	for x in vector[1:-1]:
+	i = 0
+	prev = None
+	for x in vector[:-1]:
 		after = vector[i+1]
 		if (x > prev) & (x > after) & (x > threshold):
 			pos.append(i)
@@ -127,6 +136,6 @@ def find_peaks(vector, threshold = None):
 
 
 if __name__ == '__main__':
-	i, x = wavfile.read('sample10.wav')
-	x = x - mean(x)
+	i, x = wavfile.read('sample7.wav')
+	x = array(x - mean(x), dtype=float32)/2**15
 	stft(x[:])

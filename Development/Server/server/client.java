@@ -33,4 +33,10 @@ public class Client extends Worker {
 			this.close()
 		}
 	}
+
+	public void send(byte[] mess) {
+		try {
+			output.write(mess);
+		} catch (Exception e) {e.printStackTrace();}
+	}
 }
