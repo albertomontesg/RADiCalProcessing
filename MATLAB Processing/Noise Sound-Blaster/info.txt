@@ -1,0 +1,1 @@
+The mono channel input is on the Left channel of the sound card.
