@@ -42,3 +42,16 @@ def _decode2(info):
 		speeds.append(s)
 
 	return num[0], speeds
+
+def code_information(i, mi, ma, mean, num, ped, time):
+	assert type(i) is int, 'Id is not an int'
+	assert type(mi) is float, 'Min is not an float'
+	assert type(ma) is float, 'Max is not an float'
+	assert type(mean) is float, 'Mean is not a float'
+	assert type(num) is int, 'Number of cars is not an int'
+	assert type(ped) is int, 'Estimation of pedestrian number'
+	assert type(time) is int, 'Capture time is not an int'
+
+	string = '%d\t%.1f\t%.1f\t%.1f\t%d\t%d\t%d' % (i,mi,ma,mean,num,ped,time)
+
+	return string

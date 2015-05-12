@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>73A6BD23-E8BC-48DC-A99F-38F034213A51</string>
+	<key>IDESourceControlProjectName</key>
+	<string>playground</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>0E8FF0374DD4A8E6F32E5364FB823FDD7678FB2E</key>
+		<string>https://github.com/RADiCal-PAE/RADiCalProcessing.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Development/iOS/MyPlayground.playground/playground.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>0E8FF0374DD4A8E6F32E5364FB823FDD7678FB2E</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/RADiCal-PAE/RADiCalProcessing.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>0E8FF0374DD4A8E6F32E5364FB823FDD7678FB2E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0E8FF0374DD4A8E6F32E5364FB823FDD7678FB2E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>RADiCalProcessing</string>
+		</dict>
+	</array>
+</dict>
+</plist>

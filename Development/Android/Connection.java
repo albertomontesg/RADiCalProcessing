@@ -1,0 +1,6 @@
+
+public Class Connection {
+
+	private 
+
+}

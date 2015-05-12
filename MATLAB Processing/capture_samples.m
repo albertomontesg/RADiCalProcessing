@@ -4,7 +4,7 @@ nBits = 16; % number of bits
 win = 8192; % length of the window
 over = 1024;% overlaping
 nFFT = 8192;% number of samples to do the FFT
-
+%%
 % Load environment variables
 tmp = load('Samples 2015-04-28/environment.mat');
 i = tmp.i;

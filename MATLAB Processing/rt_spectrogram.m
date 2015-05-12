@@ -7,7 +7,7 @@ spf = Fs*lattency;
 
 AR = dsp.AudioRecorder('OutputNumOverrunSamples',true,...
     'SampleRate', Fs, 'NumChannels', 1, 'SamplesPerFrame', spf);
-AR.DeviceName = 'C-Media USB Headphone Set';
+AR.DeviceName = 'USB Audio CODEC (Core Audio)';
 
 audio = zeros(1,T*Fs+1);
 recording = zeros(1,total*Fs);

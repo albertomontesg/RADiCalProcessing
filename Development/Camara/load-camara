@@ -1,0 +1,4 @@
+#!/bin/bash
+
+scp -i ~/.ssh/alberto.pem ubuntu@52.10.85.244:~/ipcapture/IPLogFile.log tmp/tmp.log
+python script.py

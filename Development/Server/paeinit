@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}' > /dev/tcp/52.10.85.244/33333
+export LD_LIBRARY_PATH=/usr/src/mjpg-streamer/mjpg-streamer-experimental/
+mjpg_streamer -i "input_raspicam.so -x 640 -y 480 -fps 20 -ex night" -o "output_http.so -w /usr/local/www" &
