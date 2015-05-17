@@ -1,0 +1,117 @@
+package server;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+/**
+ * Storage class to make the MySQL queries
+ * @author Alberto
+ *
+ */
+public class Storage {
+	private Connection connection;
+	
+	public Storage() {
+		connect();
+	}
+	
+	public void connect() {
+		// Initialization of the MySQL connection
+		try {
+			Connection connection = DriverManager.getConnection ("jdbc:mysql://localhost/radar","pae", "paeradical");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public void addValue(byte[] mess) {
+		String str = "";
+		for(int i = 1; i < mess.length; i++) {
+			str += (char) mess[i];
+		}
+		System.out.println(str);
+		String[] values = str.split("\t");
+
+		try {
+			// MySQL query
+			String query = "INSERT INTO radar_captures (Date, IdStreet, MinSpeed, MaxSpeed, MeanSpeed, NumVeh, PedNum, Time)"
+					+ "VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?);";
+			
+			// create the mysql insert preparedstatement
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setInt(1, new Integer(values[0]).intValue());
+			preparedStmt.setFloat(2, new Float(values[1]).floatValue());
+			preparedStmt.setFloat(3, new Float(values[2]).floatValue());
+			preparedStmt.setFloat(4, new Float(values[3]).floatValue());
+			preparedStmt.setInt(5, new Integer(values[4]).intValue());
+			preparedStmt.setInt(6, new Integer(values[5]).intValue());
+			preparedStmt.setInt(7, new Integer(values[6]).intValue());
+			
+			// execute the preparedstatement
+			preparedStmt.execute();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			close();
+			connect();
+		} 
+		
+		
+		
+	}
+	
+	public void close() {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Get the historic captures from the last hour
+	 * @return
+	 */
+	/*public String getHistoric(int id) {
+		String str = "0\t0.0\t0.0\t0.0\t0\t0\t0";
+		int i = 1;
+		Calendar hourAgo = Calendar.getInstance();
+		hourAgo.add(Calendar.HOUR, -1);
+		while(hourAgo.getTimeInMillis() > date.get(i).getTimeInMillis()) {i++;}
+		
+		Integer identifier = new Integer(id);
+		Float mi = Float.MAX_VALUE;
+		Float ma = Float.MIN_VALUE;
+		Float me = new Float(0.0);
+		Integer nu = new Integer(0);
+		Integer pe = new Integer(0);
+		Integer ti = new Integer(0);
+		
+		for (; i < date.size(); i++) {
+			if (ids.get(i) == identifier) {
+				mi = (mi < min.get(i)) ? mi : min.get(i);
+				ma = (ma > max.get(i)) ? ma : max.get(i);
+				nu += num.get(i);
+				me += mean.get(i) * num.get(i) / nu;
+				pe += ped.get(i);
+				ti += time.get(i);
+			}
+			
+		}
+		
+		
+		return str;
+	}*/
+	
+}

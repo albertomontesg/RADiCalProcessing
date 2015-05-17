@@ -1,0 +1,100 @@
+package server;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+/**
+ * Storage class to make the MySQL queries
+ * @author Alberto
+ *
+ */
+public class CopyOfStorage {
+//	private ArrayList<Calendar> date;
+//	private ArrayList<Integer> ids, num, ped, time;
+//	private ArrayList<Float> min, max, mean;
+//	private int numberOfElements;
+	private Connection connection;
+	
+	public CopyOfStorage() {
+		try {
+			Connection conexion = DriverManager.getConnection ("jdbc:mysql://localhost/radar","pae", "paeradical");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+//		
+//		date = new ArrayList<Calendar>();
+//		ids = new ArrayList<Integer>();
+//		min = new ArrayList<Float>();
+//		max = new ArrayList<Float>();
+//		mean = new ArrayList<Float>();
+//		num = new ArrayList<Integer>();
+//		ped = new ArrayList<Integer>();
+//		time = new ArrayList<Integer>();
+//		numberOfElements = 0;
+	}
+	
+	public void addValue(byte[] mess) {
+//		String str = "";
+//		for(int i = 1; i < mess.length; i++) {
+//			str += (char) mess[i];
+//		}
+//		System.out.println(str);
+//		String[] values = str.split("\t");
+//		
+//		date.add(Calendar.getInstance());
+//		ids.add(new Integer(values[0]));
+//		min.add(new Float(values[1]));
+//		max.add(new Float(values[2]));
+//		mean.add(new Float(values[3]));
+//		num.add(new Integer(values[4]));
+//		ped.add(new Integer(values[5]));
+//		time.add(new Integer(values[6]));
+//		
+//		numberOfElements++;
+		
+		
+		
+	}
+	
+	/**
+	 * Get the historic captures from the last hour
+	 * @return
+	 */
+	/*public String getHistoric(int id) {
+		String str = "0\t0.0\t0.0\t0.0\t0\t0\t0";
+		int i = 1;
+		Calendar hourAgo = Calendar.getInstance();
+		hourAgo.add(Calendar.HOUR, -1);
+		while(hourAgo.getTimeInMillis() > date.get(i).getTimeInMillis()) {i++;}
+		
+		Integer identifier = new Integer(id);
+		Float mi = Float.MAX_VALUE;
+		Float ma = Float.MIN_VALUE;
+		Float me = new Float(0.0);
+		Integer nu = new Integer(0);
+		Integer pe = new Integer(0);
+		Integer ti = new Integer(0);
+		
+		for (; i < date.size(); i++) {
+			if (ids.get(i) == identifier) {
+				mi = (mi < min.get(i)) ? mi : min.get(i);
+				ma = (ma > max.get(i)) ? ma : max.get(i);
+				nu += num.get(i);
+				me += mean.get(i) * num.get(i) / nu;
+				pe += ped.get(i);
+				ti += time.get(i);
+			}
+			
+		}
+		
+		
+		return str;
+	}*/
+	
+}

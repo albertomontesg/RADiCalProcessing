@@ -1,4 +1,4 @@
-package server;
+package com.radical.server;
 
 import java.net.Socket;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,12 +25,14 @@ public class Pi extends Worker {
 					this.close();
 					break;
 				} else if (mess[0] == Protocol.DATA) {
-					this.manageData(mess);
 					System.out.println("Data Received (" + this.ID + "): " + new String(mess));
-				} else {
-					this.close();
+					this.manageData(mess);
 				}
+				
+				// Flush all the data from the buffer
+				for(int j = 0; j < mess.length; j++) mess[j] = 0;
 			}
+			this.close();
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -51,6 +53,7 @@ public class Pi extends Worker {
 	}
 
 	public void deleteSubscriber(Client c) {
+		// Delete if it is subscribed
 		this.subscribers.remove(c);
 	}
 
@@ -66,9 +69,10 @@ public class Pi extends Worker {
 		/*
 		Save on the database the data received from the Raspberry Pi with ID #
 		*/
-
+		this.controller.saveCapture(mess);
 		for (Client c: this.subscribers) {
 			c.send(mess);
+			System.out.println("Missatge sent to client: " + new String(mess));
 		}
 	}
 }

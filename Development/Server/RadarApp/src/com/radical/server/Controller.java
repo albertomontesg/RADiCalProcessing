@@ -1,4 +1,4 @@
-package server;
+package com.radical.server;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -6,10 +6,12 @@ public class Controller {
 
 	private CopyOnWriteArrayList<Client> clients;
 	private CopyOnWriteArrayList<Pi> pis;
+	private Storage storage;
 
 	public Controller() {
 		this.clients = new CopyOnWriteArrayList<Client>();
 		this.pis = new CopyOnWriteArrayList<Pi>();
+		this.storage = new Storage();
 	}
 
 	public void addClient(Client c) {
@@ -28,18 +30,29 @@ public class Controller {
 		pis.remove(p);
 	}
 
-	public void subscribe(int id, Client c) {
+	public boolean subscribe(int id, Client c) {
 		for(Pi p: pis) {
-			if (p.ID == id)
+			if (p.ID == id) {
 				p.addSubscriber(c);
+				return true;
+			}
 		}
+		return false;
 	}
 
-	public void unsubscribe(int id, Client c) {
-		for(Pi p: pis) {
-			if (p.ID == id)
-				p.deleteSubscriber(c);
-		}
+	public void unsubscribe(Client c) {
+		for(Pi p: pis)
+			p.deleteSubscriber(c);
 	}
 
+	public void saveCapture(byte[] mess) {
+		this.storage.addValue(mess);
+	}
+	
+	public void sendHistoric(Client c) {
+		char[] str = ((Protocol.DATA) + this.storage.getHistoric(c.idSubscribed)).toCharArray();
+		byte[] mess = new byte[64];
+		for (int i = 0; i < mess.length && i < str.length; i++) mess[i] = (byte) str[i];
+		c.send(mess);
+	}
 }

@@ -1,6 +1,4 @@
-package server;
-
-import server.Controller;
+package com.radical.server;
 
 public class Protocol {
 	public static final byte CONNECT_PI = 0x01;
@@ -10,16 +8,5 @@ public class Protocol {
 	public static final byte SUBSCRIBE = 0x05;
 	public static final byte UNSUBSCRIBE = 0x06;
 	public static final byte DATA = 0x07;
-
-	private Controller controller;
-
-	public Protocol(Controller controller) {
-		this.controller = controller;
-	}
-
-	public static void decode(byte[] message) {
-		
-	}
-
-	
+	public static final byte GET_LAST = 0x08;
 }

@@ -1,4 +1,4 @@
-package server;
+package com.radical.server;
 
 import java.io.IOException;
 import java.io.InputStream;

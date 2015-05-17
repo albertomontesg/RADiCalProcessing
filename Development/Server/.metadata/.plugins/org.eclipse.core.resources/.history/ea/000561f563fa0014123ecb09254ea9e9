@@ -1,0 +1,54 @@
+package server;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class Storage {
+	private ArrayList<Calendar> date;
+	private ArrayList<Integer> ids, num, ped, time;
+	private ArrayList<Float> min, max, mean;
+	private int numberOfElements;
+	
+	public Storage() {
+		date = new ArrayList<Calendar>();
+		ids = new ArrayList<Integer>();
+		min = new ArrayList<Float>();
+		max = new ArrayList<Float>();
+		mean = new ArrayList<Float>();
+		num = new ArrayList<Integer>();
+		ped = new ArrayList<Integer>();
+		time = new ArrayList<Integer>();
+		numberOfElements = 0;
+	}
+	
+	public void addValue(byte[] mess) {
+		String str = "";
+		for(int i = 1; i < mess.length; i++) {
+			str += (char) mess[i];
+		}
+		System.out.println(str);
+		String[] values = str.split("\t");
+		
+		date.add(Calendar.getInstance());
+		ids.add(new Integer(values[0]));
+		min.add(new Float(values[1]));
+		max.add(new Float(values[2]));
+		mean.add(new Float(values[3]));
+		num.add(new Integer(values[4]));
+		ped.add(new Integer(values[5]));
+		time.add(new Integer(values[6]));
+	}
+	
+	/**
+	 * Get the historic captures from the last hour
+	 * @return
+	 */
+	public String getHistoric() {
+		String str = "0\t0.0\t0.0\t0.0\t0\t0\t0";
+		
+		
+		
+		return str;
+	}
+	
+}

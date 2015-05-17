@@ -1,0 +1,119 @@
+package com.radical.server;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/**
+ * Storage class to make the MySQL queries
+ * @author Alberto Montes
+ *
+ */
+public class Storage {
+	private Connection connection;
+	
+	public Storage() {
+		connect();
+	}
+	
+	public void connect() {
+		// Initialization of the MySQL connection
+		try {
+			connection = DriverManager.getConnection ("jdbc:mysql://localhost/radar","pae", "paeradical");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	public void addValue(byte[] mess) {
+		String str = "";
+		for(int i = 1; i < mess.length && mess[i] != 0; i++) {
+			str += (char) mess[i];
+		}
+		System.out.println(str);
+		String[] values = str.split("\t");
+
+		try {
+			// MySQL query
+			String query = "INSERT INTO radar_captures (Date, IdStreet, MinSpeed, MaxSpeed, MeanSpeed, NumVeh, PedNum, Time)"
+					+ "VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?);";
+			
+			// create the mysql insert preparedstatement
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			if (values[6].length()>2) System.out.println((int) values[6].charAt(2));
+			preparedStmt.setInt(1, new Integer(values[0]).intValue());
+			preparedStmt.setFloat(2, new Float(values[1]).floatValue());
+			preparedStmt.setFloat(3, new Float(values[2]).floatValue());
+			preparedStmt.setFloat(4, new Float(values[3]).floatValue());
+			preparedStmt.setInt(5, new Integer(values[4]).intValue());
+			preparedStmt.setInt(6, new Integer(values[5]).intValue());
+			preparedStmt.setInt(7, new Integer(values[6]).intValue());
+			
+			// execute the preparedstatement
+			preparedStmt.execute();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			close();
+			connect();
+		} 
+	}
+	
+	public void close() {
+		try {
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Get the historic captures from the last hour
+	 * @return
+	 */
+	public String getHistoric(int id) {
+		String str = "0\t0.0\t0.0\t0.0\t0\t0\t0";
+		
+		String query = "select * from radar_captures where Date >= date_sub(now(), interval 1 hour);";
+		
+		Statement s;
+		try {
+			s = connection.createStatement();
+			ResultSet rs = s.executeQuery (query);
+			
+			float min = Float.MAX_VALUE;
+			float max = Float.MIN_VALUE;
+			float mean = 0f;
+			int num = 0;
+			int ped = 0;
+			int time = 0;
+			
+			while(rs.next()) {
+				if (id == rs.getInt("IdStreet")) {
+					min = (min < rs.getFloat("MinSpeed")) ? min : rs.getFloat("MinSpeed");
+					max = (max > rs.getFloat("MaxSpeed")) ? max : rs.getFloat("MaxSpeed");
+					num += rs.getInt("NumVeh");
+					mean = (mean + num*rs.getFloat("MeanSpeed")) / num;
+					ped += rs.getInt("PedNum");
+					time += rs.getInt("Time");
+				}
+			}
+			
+			str = "%d\t%.1f\t%.1f\t%.1f\t%d\t%d\t%d";
+			str = String.format(str, id, min, max, mean, num, ped, time);
+			System.out.println(str);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return str;
+		}
+		
+		return str;
+	}
+	
+}

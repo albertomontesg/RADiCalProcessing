@@ -1,9 +1,9 @@
-package server;
-
-import server.Controller;
+package com.radical.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.radical.server.Controller;
 
 public class Server extends Thread {
 	private Controller controller;
@@ -21,7 +21,7 @@ public class Server extends Thread {
 		try {
 			server = new ServerSocket(serverPort);
 
-			int id = 1000;
+			int id = 1;
 			while (true) {
 				// Get the socket of the input connection
 				Socket socket = server.accept();
@@ -43,7 +43,6 @@ public class Server extends Thread {
 					w.start();
 					System.out.println("Client Connected");
 				}
-
 			}
 			
 		} catch(Exception e) {
