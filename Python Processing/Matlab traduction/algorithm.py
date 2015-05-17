@@ -108,7 +108,7 @@ def algorithm(x):
 
 	info = info[1:]
 	print min(info[:, 0]), max(info[:,1]), mean(info[:,2:], 0)
-	final_info = concatenate([[min(info[:, 0])], [max(info[:, 1])], mean(info[:, 2:])], 1) 
+	final_info = concatenate([[[min(info[:, 0])]], [[max(info[:, 1])]], [mean(info[:, 2:])]], 0) 
 
 	return final_info
 
