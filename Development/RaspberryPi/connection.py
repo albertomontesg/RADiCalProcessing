@@ -10,8 +10,6 @@ HOST = '52.10.85.244'
 PORT = 30000
 server_adress = (HOST, PORT)
 
-
-
 # States of the States Machine
 IDLE = 0
 CONNECTED = 1
@@ -51,9 +49,14 @@ class Connection(object):
 		except Exception, e:
 			raise e
 
+	def send_capture(self, info):
+		string = p.code_information(info[0], info[1], info[2], info[3], info[4], info[5], info[6])
+		self.send_data(string)
+
+
 	def send_data(self, data):
 		try:
-			print 'Send data: ' + str(data)
+			print 'Send data: ' + data
 			self.socket.send(chr(p._DATA)+data)
 		except Exception, e:
 			self.close_connection()
@@ -66,10 +69,3 @@ class Connection(object):
 		j = pos%6
 		return p.code_information(i[j], mi[j], ma[j], mean[j], num[j], ped[j], time[j])
 
-
-
-if __name__ == '__main__':
-	pi = Connection()
-	time.sleep(2)
-	pi.send_data(12.2)
-	pi.disconnect()

@@ -1,5 +1,5 @@
 
-from numpy import *
+from numpy import * 
 from scipy.io import wavfile
 from scipy.signal import chebwin
 
@@ -12,14 +12,14 @@ FLimitPedestrian = 200.0# Hz Frequency limiting the region of interest for pedes
 FLimitFlicker = 400.0	# Hz Frequency limit of the flicker noise
 G = 20.0				# dB Gain from FLimitFlicker to 0 Hz
 F_0 = 9.65e9			# Carrier Frequency
-Kp = 0.0				# ped/Watts constant to estimate the number of pedestrians
-Kv = 0.0				# veh/Watts constant to estimate the number of vehicles
+Kp = 1.0				# ped/Watts constant to estimate the number of pedestrians
+Kv = 1.0				# veh/Watts constant to estimate the number of vehicles
 
 h = 0.0					# m hight of the radar
 d = 0.0					# m perpendicular distance to the road
 l = 1.0					# m length from the projaction of the radar to the street to the 
 						# spot of the antena beam
-
+cosTheta = l / sqrt(l**2+h**2+d**2)
 
 def algorithm(x):
 	"""
@@ -43,14 +43,14 @@ def algorithm(x):
 	win = chebwin(WLEN, at=100)		# Attenuation 100dB
 
 	# Initialize index and threshold
-	indx = 0;
-	threshold = 1e4;				# Lineal
+	indx = 0
+	threshold = 1e4					# Lineal
 
 	# Frequencies vector
 	f = arange(NFFT / 2) * Fs / NFFT
 
 	while indx + WLEN < xlen:
-		print indx
+		# print indx
 
 		xw = x[indx:(indx+WLEN)] * win
 		xw = xw - mean(xw)
@@ -84,14 +84,16 @@ def algorithm(x):
 		# 	pdf[j] = max(pdf[j], threshold[j])
 		pdf = [max(pdf[j], threshold) for j in range(len(pdf))]
 		pdf = pdf - threshold
-		pdf = pdf / sum(pdf)
+		if sum(pdf) != 0:
+			pdf = pdf / sum(pdf)
 		f_mean = sum(f_obs*pdf)
 		v_mean = compute_speed(f_mean)
 
 		# Finding peaks
-		pks_pos = find_peaks(XdB, bandwidth = 10)
+		pks_pos = find_peaks(XdB, bandwidth = 5)
 		pks_pos = pks_pos[XdB[pks_pos] > threshold_dB[pks_pos]]
-		v = compute_speed(f_obs[f_obs[pks_pos]>FLimitPedestrian])
+		f_pks = f_obs[pks_pos]
+		v = compute_speed(f_pks[f_pks>FLimitPedestrian])
 
 		# Determine the v_min and v_max
 		v_min, v_max = 0, 0
@@ -107,8 +109,12 @@ def algorithm(x):
 		info = concatenate([info, [aux]], 0)
 
 	info = info[1:]
-	print min(info[:, 0]), max(info[:,1]), mean(info[:,2:], 0)
-	final_info = concatenate([[[min(info[:, 0])]], [[max(info[:, 1])]], [mean(info[:, 2:])]], 0) 
+	v_min = min(info[info[:,0] != 0, 0])
+	v_max = max(info[info[:,1] != 0, 1])
+	me = mean(info[info[:,2] != 0, 2])
+	nums = sum(info[:, 3:], 0)
+	print v_min, v_max, me, nums
+	final_info = concatenate(([v_min], [v_max], [me], nums))
 
 	return final_info
 
@@ -139,7 +145,7 @@ def find_peaks(vector, threshold = None, bandwidth = 1):
 def compute_speed(freq):
 
 	speed = freq * 3e8 / (2 * F_0) * 3.6		# km/h
-
+	speed = speed / cosTheta
 	# transform speed
 	return speed
 
@@ -149,7 +155,7 @@ def frequency_divider(x, divider = 1):
 
 if __name__ == '__main__':	
 
-	i, x = wavfile.read('testPython/sample6.wav')
+	i, x = wavfile.read('testPython/sample9.wav')
 	print "Read wav"
 	x = array(x, dtype=float32)/2**15
 	print len(x)
