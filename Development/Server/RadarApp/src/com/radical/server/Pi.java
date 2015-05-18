@@ -1,17 +1,20 @@
 package com.radical.server;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Pi extends Worker {
 	public int ID;
 	private CopyOnWriteArrayList<Client> subscribers;
+	private byte[] last;
 
 	public Pi(Socket s, Controller c, int id) {
 		super(s, c);
 		this.ID = id;
 		System.out.println("Pi Worker Started");
 		this.subscribers = new CopyOnWriteArrayList<Client>();
+		this.last = new byte[64];
 	}
 
 	public void run() {
@@ -26,6 +29,8 @@ public class Pi extends Worker {
 					break;
 				} else if (mess[0] == Protocol.DATA) {
 					System.out.println("Data Received (" + this.ID + "): " + new String(mess));
+					System.arraycopy(mess, 0, this.last, 0, 64);
+					System.out.println("Last saved: " + new String(mess));
 					this.manageData(mess);
 				}
 				
@@ -46,6 +51,14 @@ public class Pi extends Worker {
 			this.controller.deletePi(this);
 			System.out.println("Clossing Pi");
 		} catch(Exception e) {e.printStackTrace();}
+	}
+
+	public int getID() {
+		return this.ID;
+	}
+
+	public byte[] getLast() {
+		return this.last;
 	}
 	
 	public void addSubscriber(Client c) {
@@ -73,6 +86,17 @@ public class Pi extends Worker {
 		for (Client c: this.subscribers) {
 			c.send(mess);
 			System.out.println("Missatge sent to client: " + new String(mess));
+		}
+	}
+	
+	public void sendID(int id) {
+		try {
+			byte[] b = new byte[1];
+			b[0] = (byte) (id+'0');
+			this.socket.getOutputStream().write(b);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

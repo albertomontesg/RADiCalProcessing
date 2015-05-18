@@ -1,22 +1,30 @@
 
-import numpy as np
+from numpy import * 
+from scipy.io import wavfile
 from scipy.signal import chebwin
+from time import time
+import filter
 
-WLEN = 4096				# Window length
-H = WLEN/4				# Overlaping at the STFT
-NFFT = 4096				# Number of samples to compute the FFT
-Fs = 44100				# Hz Frequency Sampling
-FLimitSpeed = 1600		# Hz Frequency limiting the region of interest
-FLimitPedestrian = 200	# Hz Frequency limiting the region of interest for pedestrians
-FLimitFlicker = 400		# Hz Frequency limit of the flicker noise
-G = 20					# dB Gain from FLimitFlicker to 0 Hz
-F_0 = 9.65e9			# Carrier Frequency
-Kp = 0					# ped/Watts constant to estimate the number of pedestrians
-Kv = 0					# veh/Watts constant to estimate the number of vehicles
+global Fs
 
-h = 0					# m hight of the radar
-d = 0
-l = 0
+WLEN = 4096					# Window length
+DOWNSAMPLING = 8			# Take une sample for each 8 to reduce the computation
+H = 0 # WLEN/4				# Overlaping at the STFT
+NFFT = 512					# Number of samples to compute the FFT
+Fs = 44100.0				# Hz Frequency Sampling
+FLimitSpeed = 1600.0		# Hz Frequency limiting the region of interest
+FLimitPedestrian = 200.0	# Hz Frequency limiting the region of interest for pedestrians
+FLimitFlicker = 400.0		# Hz Frequency limit of the flicker noise
+G = 20.0					# dB Gain from FLimitFlicker to 0 Hz
+F_0 = 9.65e9				# Carrier Frequency
+Kp = 1.0					# ped/Watts constant to estimate the number of pedestrians
+Kv = 1.0					# veh/Watts constant to estimate the number of vehicles
+
+h = 0.0						# m hight of the radar
+d = 0.0						# m perpendicular distance to the road
+l = 1.0						# m length from the projaction of the radar to the street to 
+							# the spot of the antena beam
+cosTheta = l / sqrt(l**2+h**2+d**2)
 
 def algorithm(x):
 	"""
@@ -29,77 +37,83 @@ def algorithm(x):
 	- Number of vehicles seen
 	- Number of pedestrians seen
 	"""
+	global Fs
+	if type(x) != ndarray:
+		x = array(x)
+	assert type(x) is ndarray, 'The input is not a vector'
 
-	if type(x) != np.ndarray:
-		x = np.array(x)
-	assert type(x) is np.ndarray, 'The input is not a vector'
-
-	info = np.zeros((1,5)) 			# V_min, V_max, V_mean, N_veh, N_ped
+	info = zeros((1,5)) 			# V_min, V_max, V_mean, N_veh, N_ped
 	xlen = len(x)
 
 	win = chebwin(WLEN, at=100)		# Attenuation 100dB
 
 	# Initialize index and threshold
-	indx = 0;
-	threshold = 1e4;				# Lineal
+	indx = 0
+	threshold = 1e4					# Lineal
 
 	# Frequencies vector
-	f = np.arange(NFFT / 2) / NFFT * Fs
+	f_t = arange(NFFT) * Fs / NFFT
+	f = f_t[f_t<FLimitSpeed]
 
 	while indx + WLEN < xlen:
+		# print indx
 
 		xw = x[indx:(indx+WLEN)] * win
-		xw = xw - np.mean(xw)
+		xw = xw - mean(xw)
 
-		X = np.abs(np.fft.fft(xw, NFFT))[:NFFT/2]
+		X = abs(fft.fft(xw, NFFT))[f_t<FLimitSpeed]
+		XdB = 20 * log10(X)
 		X_2 = X[f[X<threshold]>FLimitFlicker]
-		mn = np.mean(X_2)
-		st = np.std(X_2)
+		mn = mean(X_2)
+		st = std(X_2)
 		threshold = mn + 5 * st
-		flat_threshold_dB = 20 * np.log10(threshold)
+		flat_threshold_dB = 20 * log10(threshold)
 
-		ramp_threshold_dB = flat_threshold_dB - G / FLimitFlicker * (f - FLimitFlicker)
-		threshold_dB = np.array([max(flat_threshold_dB, t) for t in ramp_threshold_dB])
-
-		f_obs = f[f<FLimitSpeed]
-		X = X[f<FLimitSpeed]
-		XdB = 20 * np.log10(X)
-		threshold_dB = threshold_dB[f<FLimitSpeed]
+		ramp_threshold_dB = flat_threshold_dB - (f - FLimitFlicker) * G / FLimitFlicker
+		threshold_dB = array([max(flat_threshold_dB, t) for t in ramp_threshold_dB])
 
 		# Compute the power from 0 to 200 Hz to stimate the average number of pedestrians
-		power_ped = np.sum(X[f_obs<FLimitPedestrian])
+		power_ped = sum(X[f<FLimitPedestrian])
 		N_ped = Kp * power_ped
 
 		# Compute the power from 200 Hz to 1.5 kHz to stimate the average number of vehicles
-		power_veh = np.sum(X[f_obs>=FLimitPedestrian])
+		power_veh = sum(X[f>=FLimitPedestrian])
 		N_veh = Kv * power_veh
 
 		# Creation of PDF of velocities to estimate average speed of vehicles
-		pdf = np.concatenate([np.zeros(len(f[f_obs<FLimitPedestrian])),X[f_obs>=FLimitPedestrian]])
-		pdf = [max(pdf[i], threshold[i]) for i in range(len(pdf))]
+		pdf = concatenate([zeros(len(f[f<FLimitPedestrian])),X[f>=FLimitPedestrian]])
+		pdf = [max(pdf[j], threshold) for j in range(len(pdf))]
 		pdf = pdf - threshold
-		pdf = pdf / np.sum(pdf)
-		f_mean = np.sum(f_obs*pdf)
+		if sum(pdf) != 0:
+			pdf = pdf / sum(pdf)
+		f_mean = sum(f*pdf)
 		v_mean = compute_speed(f_mean)
 
 		# Finding peaks
-		pks_pos = find_peaks(XdB, bandwidth = 10)
+		pks_pos = find_peaks(XdB, bandwidth = 5)
 		pks_pos = pks_pos[XdB[pks_pos] > threshold_dB[pks_pos]]
-		v = compute_speed(f_obs[f_obs[pks_pos]>FLimitPedestrian])
+		f_pks = f[pks_pos]
+		v = compute_speed(f_pks[f_pks>FLimitPedestrian])
 
 		# Determine the v_min and v_max
-		v_min = max(min(v),0)
-		v_max = max(max(v),0)
+		v_min, v_max = 0, 0
+		if len(v) > 0:
+			v_min = min(v)
+			v_max = max(v)
 
 		# update indexes
-		indx = indx + h
+		indx = indx + WLEN - H
 
 		# Gathering
 		aux = [v_min, v_max, v_mean, N_veh, N_ped]
-		info = np.concatenate(info, [aux])
+		info = concatenate([info, [aux]], 0)
 
 	info = info[1:]
-	final_info = np.concatenate([min(info[:, 0]), max(info[:, 1]), np.mean(info[:, 2:])]) 
+	v_min = min(info[info[:,0] != 0, 0])
+	v_max = max(info[info[:,1] != 0, 1])
+	me = mean(info[info[:,2] != 0, 2])
+	nums = sum(info[:, 3:], 0)
+	final_info = concatenate(([v_min], [v_max], [me], nums))
 
 	return final_info
 
@@ -114,7 +128,7 @@ def find_peaks(vector, threshold = None, bandwidth = 1):
 		if (i+bandwidth) < len(vector):
 			after = vector[range(i+1, i+1+bandwidth)]
 		else:
-			after = np.concatenate([vector[i+1:], [None]*(bandwidth-(len(vector)-i-1))])
+			after = concatenate([vector[i+1:], [None]*(bandwidth-(len(vector)-i-1))])
 		
 		for l in range(bandwidth):
 			if (x < prev[l]) | (x < after[l]) | (x < threshold):
@@ -124,25 +138,34 @@ def find_peaks(vector, threshold = None, bandwidth = 1):
 		prev[:-1] = prev[1:]
 		prev[-1] = x
 		i = i + 1
-	return np.array(pos)
-
+	return array(pos)
 
 
 def compute_speed(freq):
 
 	speed = freq * 3e8 / (2 * F_0) * 3.6		# km/h
-
+	speed = speed / cosTheta
 	# transform speed
 	return speed
 
-
-if __name__ == '__main__':
-	x = np.array(range(40))/4.0
-	y = np.sin(x)
-	print find_peaks(y)
-	print find_peaks(y, bandwidth = 3)
-	print find_peaks(y, bandwidth = 40)
-	print find_peaks(y, threshold = 1)
-	print find_peaks(y, threshold = 1, bandwidth = 40)	
+def downsampling(x):
+	global Fs
+	x_tmp = convolve(x, filter.get_filter(), 'same') * 20 * log10(8)
+	p = arange(0, (len(x)/DOWNSAMPLING))
+	Fs = Fs / DOWNSAMPLING
+	return x_tmp[DOWNSAMPLING*p]
 
 
+if __name__ == '__main__':	
+
+	i, x = wavfile.read('testPython/sample6.wav')
+	print "Read wav"
+	x = array(x, dtype=float16)/2**15
+	print len(x)
+	x = downsampling(x)
+	print len(x)
+	start = time()
+	data = algorithm(x)
+	stop = time()
+	print data
+	print 'Spent: ', (stop-start), ' seconds'

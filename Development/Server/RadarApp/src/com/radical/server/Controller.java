@@ -32,7 +32,7 @@ public class Controller {
 
 	public boolean subscribe(int id, Client c) {
 		for(Pi p: pis) {
-			if (p.ID == id) {
+			if (p.getID() == id) {
 				p.addSubscriber(c);
 				return true;
 			}
@@ -50,9 +50,23 @@ public class Controller {
 	}
 	
 	public void sendHistoric(Client c) {
-		char[] str = ((Protocol.DATA) + this.storage.getHistoric(c.idSubscribed)).toCharArray();
+		char[] str = (this.storage.getHistoric(c.idSubscribed)).toCharArray();
 		byte[] mess = new byte[64];
-		for (int i = 0; i < mess.length && i < str.length; i++) mess[i] = (byte) str[i];
+		mess[0] = Protocol.DATA;
+		for (int i = 1; i < mess.length && i <= str.length; i++) mess[i] = (byte) str[i-1];
 		c.send(mess);
+	}
+
+	public byte[] getLast(int id) {
+		for (Pi p : pis) {
+			if (p.getID() == id)
+				System.out.println("Send last: " + new String(p.getLast()));
+				return p.getLast();
+		}
+		char[] str = ("0\t0.0\t0.0\t0.0\t0\t0\t0").toCharArray();
+		byte[] mess = new byte[64];
+		mess[0] = Protocol.DATA;
+		for (int i = 1; i < mess.length && i <= str.length; i++) mess[i] = (byte) str[i-1];
+		return mess;
 	}
 }

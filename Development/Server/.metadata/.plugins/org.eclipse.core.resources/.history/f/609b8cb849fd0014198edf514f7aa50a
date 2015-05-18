@@ -1,0 +1,100 @@
+package com.radical.server;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class Pi extends Worker {
+	public int ID;
+	private CopyOnWriteArrayList<Client> subscribers;
+	private byte[] last;
+
+	public Pi(Socket s, Controller c, int id) {
+		super(s, c);
+		this.ID = id;
+		System.out.println("Pi Worker Started");
+		this.subscribers = new CopyOnWriteArrayList<Client>();
+		this.last = new byte[64];
+	}
+
+	public void run() {
+		try {
+			byte[] mess = new byte[64];
+			while((input.read(mess)) != -1) {
+				if (mess[0] == Protocol.DISCONNECT_PI) {
+					this.deleteAllSubscribers();
+					this.controller.deletePi(this);
+					System.out.println("Pi Disconnected: " + this.ID);
+					this.close();
+					break;
+				} else if (mess[0] == Protocol.DATA) {
+					System.out.println("Data Received (" + this.ID + "): " + new String(mess));
+					System.arraycopy(mess, 0, this.last, 0, 64);
+					System.out.println("Last saved: " + new String(mess));
+					this.manageData(mess);
+				}
+				
+				// Flush all the data from the buffer
+				for(int j = 0; j < mess.length; j++) mess[j] = 0;
+			}
+			this.close();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			this.close();
+		}
+	}
+
+	public void close() {
+		try {
+			this.socket.close();
+			this.controller.deletePi(this);
+			System.out.println("Clossing Pi");
+		} catch(Exception e) {e.printStackTrace();}
+	}
+
+	public int getID() {
+		return this.ID;
+	}
+
+	public byte[] getLast() {
+		return this.last;
+	}
+	
+	public void addSubscriber(Client c) {
+		this.subscribers.add(c);
+	}
+
+	public void deleteSubscriber(Client c) {
+		// Delete if it is subscribed
+		this.subscribers.remove(c);
+	}
+
+	public void deleteAllSubscribers() {
+		this.subscribers.clear();
+	}
+
+	public CopyOnWriteArrayList<Client> getSubscribers() {
+		return this.subscribers;
+	}
+
+	private void manageData(byte[] mess) {
+		/*
+		Save on the database the data received from the Raspberry Pi with ID #
+		*/
+		this.controller.saveCapture(mess);
+		for (Client c: this.subscribers) {
+			c.send(mess);
+			System.out.println("Missatge sent to client: " + new String(mess));
+		}
+	}
+	
+	public void sendID(int id) {
+		try {
+			this.socket.getOutputStream().write(char(id));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

@@ -8,8 +8,8 @@ import numpy as np
 Connection class of the client
 """
 
-HOST = '52.10.85.244'
-#HOST = 'localhost'
+#HOST = '52.10.85.244'
+HOST = 'localhost'
 #HOST = '192.168.2.1'
 PORT = 30000
 server_adress = (HOST, PORT)
@@ -55,18 +55,12 @@ class Connection(object):
 			raise e
 
 	def receive(self):
-		data = self.socket.recv(64)
-		return data
-		if data[0] == chr(p._DATA):
-			return data[1:]
+		if self.state == SUBSCRIBED:
+			data = self.socket.recv(64)
+			return data
+		else:
+			return None
 
 	def get_state(self):
 		return self.state
 
-
-
-if __name__ == '__main__':
-	pi = Connection()
-	time.sleep(2)
-	pi.send_data(12.2)
-	pi.disconnect()

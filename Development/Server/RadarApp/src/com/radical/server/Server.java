@@ -31,9 +31,10 @@ public class Server extends Thread {
 				byte[] msg = new byte[L];
 				socket.getInputStream().read(msg);
 				if (msg[0] == Protocol.CONNECT_PI) {
-					w = new Pi(socket, this.controller, id);
-					this.controller.addPi((Pi)w);
-					w.start();
+					Pi p = new Pi(socket, this.controller, id);
+					this.controller.addPi(p);
+					p.sendID(id);
+					p.start();
 					System.out.println("Pi Connected:" + id);
 					id++;
 				}

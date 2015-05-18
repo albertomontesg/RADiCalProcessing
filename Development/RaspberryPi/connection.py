@@ -4,8 +4,8 @@ import socket
 import time
 import numpy as np
 
-HOST = '52.10.85.244'
-#HOST = 'localhost'
+#HOST = '52.10.85.244'
+HOST = 'localhost'
 #HOST = '192.168.2.1'
 PORT = 30000
 server_adress = (HOST, PORT)
@@ -34,6 +34,7 @@ class Connection(object):
 	def init_connection(self):
 		self.socket.send(chr(p._CONNECT_PI))
 		self.state = CONNECTED
+		self.id = int(self.socket.recv(1))
 		print 'Connected'
 
 	def disconnect(self):
@@ -67,5 +68,5 @@ class Connection(object):
 	
 	def get_samples(self, pos):
 		j = pos%6
-		return p.code_information(i[j], mi[j], ma[j], mean[j], num[j], ped[j], time[j])
+		return p.code_information(self.id, mi[j], ma[j], mean[j], num[j], ped[j], time[j])
 

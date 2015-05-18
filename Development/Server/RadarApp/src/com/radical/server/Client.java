@@ -28,6 +28,9 @@ public class Client extends Worker {
 						System.out.println("Client subscribed to radar: "+ id);
 						this.controller.sendHistoric(this);
 					}
+				} else if (mess[0] == Protocol.GET_LAST) {
+					System.out.println("Last asked");
+					this.send(this.controller.getLast(idSubscribed));
 				} else if (mess[0] == Protocol.UNSUBSCRIBE) {
 					//mess[1:2] define the id of the Pi
 					// TODO

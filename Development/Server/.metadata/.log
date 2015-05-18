@@ -378,3 +378,45 @@ Binding(ALT+COMMAND+R,
 !MESSAGE Error parsing metadata repository
 !SUBENTRY 1 org.eclipse.equinox.p2.core 2 0 2015-05-15 09:30:29.392
 !MESSAGE Error in file:/Applications/eclipse/p2/org.eclipse.equinox.p2.repository/cache/content1354804290.jar at line 11248, column 62: Missing required attribute in "property": value
+!SESSION 2015-05-18 09:01:31.668 -----------------------------------------------
+eclipse.buildId=4.3.2.M20140221-1700
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.standard.product -keyring /Users/Alberto/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.standard.product -keyring /Users/Alberto/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2015-05-18 09:01:51.038
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY org.eclipse.jface 2 0 2015-05-18 09:01:55.021
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2015-05-18 09:01:55.021
+!MESSAGE A conflict occurred for ALT+COMMAND+R:
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.python.pydev.debug.setnext,Set Next Statement,
+		,
+		Category(org.python.pydev.ui.category.run,PyDev - Run,Python run category,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@148d298e,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,,system)
+Binding(ALT+COMMAND+R,
+	ParameterizedCommand(Command(org.eclipse.jdt.ui.edit.text.java.rename.element,Rename - Refactoring ,
+		Rename the selected element,
+		Category(org.eclipse.jdt.ui.category.refactoring,Refactor - Java,Java Refactoring Actions,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@3fa3342c,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.contexts.window,,cocoa,system)
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2015-05-18 09:03:15.813
+!MESSAGE No repository found at jar:file:/Users/Alberto/Downloads/objectaid-1.1.5.zip!/.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2015-05-18 09:04:06.590
+!MESSAGE Server returned lastModified <= 0 for http://marketplace.obeonetwork.com/updates/od62/content.jar
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 2 0 2015-05-18 09:04:08.622
+!MESSAGE Error parsing metadata repository
+!SUBENTRY 1 org.eclipse.equinox.p2.core 2 0 2015-05-18 09:04:08.622
+!MESSAGE Error in file:/Applications/eclipse/p2/org.eclipse.equinox.p2.repository/cache/content1354804290.jar at line 11248, column 62: Missing required attribute in "property": value
