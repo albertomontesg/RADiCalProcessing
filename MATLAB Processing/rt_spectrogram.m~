@@ -12,6 +12,7 @@ AR.DeviceName = 'USB Audio CODEC';
 audio = zeros(1,T*Fs+1);
 recording = zeros(1,total*Fs);
 t = -T:1/Fs:0;
+f = (0:4095)/4096 * Fs;
 
 for i=0:(total*Fs/spf)
     [audioIn,nOverrun] = step(AR);
@@ -27,10 +28,17 @@ for i=0:(total*Fs/spf)
     ylabel('amplitude')
     title('Real Time Sound Recording')
     
+    X = 20*log10(abs(fft(audioIn, 4096)));
+    figure(2)
+    plot(f, X)
+    axis([f(1), f(end), -40, 0])
+    xlabel('frequency (Hz)')
+    ylabel(
+    
     drawnow
 end
 
-figure(2)
-spectrogram(audio, 2048, 1024, 2048, Fs)
+% figure(2)
+% spectrogram(audio, 2048, 1024, 2048, Fs)
 
 %soundsc(audio, Fs)

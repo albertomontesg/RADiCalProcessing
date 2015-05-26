@@ -56,7 +56,7 @@ class Connection(object):
 	def send_capture(self, info):
 		if info[1] == None:
 			info[1:4] = [0.]*3
-		string = p.code_information(int(info[0]), float(info[1]), float(info[2]), float(info[3]), int(info[4]), int(info[5]), int(info[6]))
+		string = p.code_information(self.id, float(info[1]), float(info[2]), float(info[3]), int(info[4]), int(info[5]), int(info[6]))
 		self.send_data(string)
 
 

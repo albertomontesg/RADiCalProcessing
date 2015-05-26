@@ -9,7 +9,7 @@ public class Server extends Thread {
 	private Controller controller;
 	private ServerSocket server;
 
-	private static final int serverPort = 8080;
+	private static final int serverPort = 3128;
 	private static final int L = 64;
 	
 	public Server() {

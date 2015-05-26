@@ -40,7 +40,7 @@ public class Storage {
 		try {
 			// MySQL query
 			String query = "INSERT INTO radar_captures (Date, IdStreet, MinSpeed, MaxSpeed, MeanSpeed, NumVeh, PedNum, Time)"
-					+ "VALUES (DATE_ADD(NOW(),INTERVAL 2 HOUR), ?, ?, ?, ?, ?, ?, ?);";
+					+ "VALUES (NOW(), ?, ?, ?, ?, ?, ?, ?);";
 			
 			// create the mysql insert preparedstatement
 			PreparedStatement preparedStmt = connection.prepareStatement(query);

@@ -12,7 +12,7 @@ from serial_connection import SerialConnection
 
 RADAR_ID = 1
 STREETS = [1, 2, 3]
-TIME = 10			# s seconds of the capture
+TIME = 20			# s seconds of the capture
 
 
 # Init logger
@@ -28,14 +28,13 @@ if __name__ == '__main__':
 	while True:
 		# try:
 		motor.move(i)
-		time.sleep(.5)
+		time.sleep(1)
 		data = capture.record(time = TIME)
 		start = time()
 		info = algorithm(downsampling(data))
-		print info
 		stop = time()
 		print 'Algorithm expend: ', (stop-start), ' seconds'
-		info = concatenate(([STREETS[i]], info, [TIME]))
+		info = concatenate((RADAR_ID[i], info, [TIME]))
 		print 'Algorithm info: ', info
 		connection.send_capture(info)
 

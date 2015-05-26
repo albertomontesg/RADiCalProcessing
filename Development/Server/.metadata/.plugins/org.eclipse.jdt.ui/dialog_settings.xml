@@ -18,13 +18,18 @@
 	<section name="BuildPathsPropertyPage">
 		<item value="3" key="pageIndex"/>
 	</section>
+	<section name="RefactoringWizard.preview">
+		<item value="400" key="height"/>
+		<item value="600" key="width"/>
+	</section>
 	<section name="FatJarPackageWizard">
-		<item value="/Users/Alberto/Desktop/server.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="/Users/Alberto/Documents/Universidad/Curso Actual/Proyecto Avanzado de Ingenieria/Processing/RADiCalProcessing/Development/Server/server.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="New_configuration - RadarApp" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
 		<item value="/Users/Alberto/Documents/Universidad/Curso Actual/Proyecto Avanzado de Ingenieria/Processing/RADiCalProcessing/Development/Server" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
 		<item value="false" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="2" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/Users/Alberto/Documents/Universidad/Curso Actual/Proyecto Avanzado de Ingenieria/Processing/RADiCalProcessing/Development/Server/server.jar"/>
 			<item value="/Users/Alberto/Desktop/server.jar"/>
 		</list>
 		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
@@ -32,21 +37,17 @@
 			<item value=".xml"/>
 		</list>
 	</section>
-	<section name="RefactoringWizard.preview">
-		<item value="400" key="height"/>
-		<item value="600" key="width"/>
-	</section>
-	<section name="quick_assist_proposal_size">
+	<section name="org.eclipse.ltk.ui.refactoring.settings">
+		<item value="*" key="patterns"/>
+		<item value="false" key="updateQualifiedNames"/>
+		<item value="false" key="renameSubpackages"/>
+		<item value="false" key="updateTextualMatches"/>
 	</section>
 	<section name="NewClassWizardPage">
 		<item value="false" key="create_constructor"/>
 		<item value="true" key="create_unimplemented"/>
 	</section>
-	<section name="org.eclipse.ltk.ui.refactoring.settings">
-		<item value="false" key="renameSubpackages"/>
-		<item value="false" key="updateQualifiedNames"/>
-		<item value="*" key="patterns"/>
-		<item value="false" key="updateTextualMatches"/>
+	<section name="quick_assist_proposal_size">
 	</section>
 	<section name="NewPackageWizardPage">
 		<item value="false" key="create_package_info_java"/>

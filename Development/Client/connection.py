@@ -11,7 +11,7 @@ Connection class of the client
 #HOST = '52.10.85.244'
 HOST = 'localhost'
 #HOST = '192.168.2.1'
-PORT = 30000
+PORT = 8080
 server_adress = (HOST, PORT)
 
 # States of the States Machine

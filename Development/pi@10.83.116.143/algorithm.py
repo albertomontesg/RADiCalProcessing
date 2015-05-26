@@ -64,16 +64,15 @@ def algorithm(x):
 
 		X = abs(fft.fft(xw, NFFT))[f_t<FLimitSpeed]
 		XdB = 20 * log10(X)
-		# X_2 = X[f[X<threshold]>FLimitFlicker]
-		X_2 = X[f>FLimitFlicker]
+		X_2 = X[f[X<threshold]>FLimitFlicker]
 		if len(X_2) > 0:
 			mn = mean(X_2)
 			st = std(X_2)
 			threshold = mn + 7 * st
-		flat_threshold_dB = 20 * log10(threshold)
+			flat_threshold_dB = 20 * log10(threshold)
 
-		ramp_threshold_dB = flat_threshold_dB - (f - FLimitFlicker) * G / FLimitFlicker
-		threshold_dB = array([max(flat_threshold_dB, t) for t in ramp_threshold_dB])
+			ramp_threshold_dB = flat_threshold_dB - (f - FLimitFlicker) * G / FLimitFlicker
+			threshold_dB = array([max(flat_threshold_dB, t) for t in ramp_threshold_dB])
 
 		# Compute the power from 0 to 200 Hz to stimate the average number of pedestrians
 		power_ped = sum(X[f<FLimitPedestrian])
